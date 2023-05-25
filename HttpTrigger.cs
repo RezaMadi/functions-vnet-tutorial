@@ -49,9 +49,9 @@ namespace Company.Function
 
         private static async Task OperateBlobAsync(ILogger log,string content)
         {
-            string tempDirectory = null;
-            string destinationPath = null;
-            string sourcePath = null;
+            //string tempDirectory = null;
+            //string destinationPath = null;
+            //string sourcePath = null;
             BlobContainerClient blobContainerClient = null;
 
             // Retrieve the connection string for use with the application. The storage connection string is stored
@@ -59,12 +59,11 @@ namespace Company.Function
             // If the environment variable is created after the application is launched in a console or with Visual
             // Studio, the shell needs to be closed and reloaded to take the environment variable into account.
             string storageConnectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTIONSTRING");
-            log.LogInformation(storageConnectionString);
 
 
             if (storageConnectionString == null)
             {
-                Console.WriteLine("A connection string has not been defined in the system environment variables. " +
+                log.LogWarning("A connection string has not been defined in the system environment variables. " +
                     "Add a environment variable named 'AZURE_STORAGE_CONNECTIONSTRING' with your storage " +
                     "connection string as a value.");
 
@@ -76,8 +75,7 @@ namespace Company.Function
                 string containerName = "quickstartblob" + Guid.NewGuid().ToString();
                 blobContainerClient = new BlobContainerClient(storageConnectionString, containerName);
                 await blobContainerClient.CreateAsync();
-                Console.WriteLine($"Created container '{blobContainerClient.Uri}'");
-                Console.WriteLine();
+                log.LogInformation($"Created container '{blobContainerClient.Uri}'");
 
                 // Set the permissions so the blobs are public. 
                 //await blobContainerClient.SetAccessPolicyAsync(PublicAccessType.Blob);
@@ -111,18 +109,16 @@ namespace Company.Function
                     await blob.UploadAsync(ms);
                 }
                 
-                Console.WriteLine("Uploaded successfully.");
-                Console.WriteLine();
+                log.LogInformation($"Uploaded successfully.'{blobName}'");
 
                 // List the blobs in the container.
-                Console.WriteLine("Listing blobs in container.");
+                log.LogInformation("Listing blobs in container.");
                 await foreach (BlobItem item in blobContainerClient.GetBlobsAsync())
                 {
-                    Console.WriteLine($"The blob name is '{item.Name}'");
+                    log.LogInformation($"The blob name is '{item.Name}'");
                 }
 
-                Console.WriteLine("Listed successfully.");
-                Console.WriteLine();
+                log.LogInformation("Listed successfully.");
 
                 // Append the string "_DOWNLOADED" before the .txt extension so that you can see both files in the temp directory.
                 //destinationPath = sourcePath.Replace(".txt", "_DOWNLOADED.txt");
