@@ -85,10 +85,10 @@ namespace Company.Function
                 //Console.WriteLine();
 
                 // Create a file in a temp directory folder to upload to a blob.
-                tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                //tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 //Directory.CreateDirectory(tempDirectory);
-                string blobFileName = $"QuickStart_{Path.GetRandomFileName()}.txt";
-                sourcePath = Path.Combine(tempDirectory, blobFileName);
+                //string blobFileName = $"QuickStart_{Path.GetRandomFileName()}.txt";
+                //sourcePath = Path.Combine(tempDirectory, blobFileName);
 
                 // Write text to this file.
                 //File.WriteAllText(sourcePath, "Storage Blob Quickstart.");
@@ -125,50 +125,23 @@ namespace Company.Function
                 Console.WriteLine();
 
                 // Append the string "_DOWNLOADED" before the .txt extension so that you can see both files in the temp directory.
-                destinationPath = sourcePath.Replace(".txt", "_DOWNLOADED.txt");
+                //destinationPath = sourcePath.Replace(".txt", "_DOWNLOADED.txt");
 
                 // Download the blob to a file in same directory, using the reference created earlier. 
-                Console.WriteLine($"Downloading blob to file in the temp directory {destinationPath}");
-                BlobDownloadInfo blobDownload = await blob.DownloadAsync();
+                //Console.WriteLine($"Downloading blob to file in the temp directory {destinationPath}");
+                //BlobDownloadInfo blobDownload = await blob.DownloadAsync();
 
-                using (FileStream fileStream = File.OpenWrite(destinationPath))
-                {
-                    await blobDownload.Content.CopyToAsync(fileStream);
-                }
+                //using (FileStream fileStream = File.OpenWrite(destinationPath))
+                //{
+                //    await blobDownload.Content.CopyToAsync(fileStream);
+                //}
 
-                Console.WriteLine("Downloaded successfully.");
-                Console.WriteLine();
+                //Console.WriteLine("Downloaded successfully.");
+                //Console.WriteLine();
             }
             catch (RequestFailedException ex)
             {
                 Console.WriteLine($"Error returned from the service: {ex.Message}");
-            }
-            finally
-            {
-                Console.WriteLine("Press enter to delete the sample files and example container.");
-                Console.ReadLine();
-
-                // Clean up resources. This includes the container and the two temp files.
-                Console.WriteLine("Deleting the container and any blobs it contains.");
-                if (blobContainerClient != null)
-                {
-                    await blobContainerClient.DeleteAsync();
-                }
-
-                Console.WriteLine("Deleting the local source file and local downloaded files.");
-                Console.WriteLine();
-                if (File.Exists(sourcePath))
-                {
-                    File.Delete(sourcePath);
-                }
-                if (File.Exists(destinationPath))
-                {
-                    File.Delete(destinationPath);
-                }
-                if (Directory.Exists(tempDirectory))
-                {
-                    Directory.Delete(tempDirectory);
-                }
             }
 
         }  
